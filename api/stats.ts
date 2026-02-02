@@ -167,16 +167,16 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
       <text x="310" y="0" font-size="14" fill="${THEME.textMuted}" text-anchor="end">${lang.percentage}%</text>
       
       <!-- Bar Background -->
-      <rect x="0" y="8" width="310" height="8" fill="${THEME.accentSecondary}" rx="3" />
+      <rect x="0" y="10" width="310" height="6" fill="${THEME.accentSecondary}" rx="3" />
       <!-- Bar Progress -->
-      <rect x="0" y="8" width="${(lang.percentage / 100) * 310}" height="8" fill="${lang.color || THEME.accentPrimary}" rx="3" />
+      <rect x="0" y="10" width="${(lang.percentage / 100) * 310}" height="6" fill="${lang.color || THEME.accentPrimary}" rx="3" />
     </g>
   `;
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&amp;display=swap');
         .title { font: 700 22px '${THEME.fontFamily}'; fill: ${THEME.textMain}; letter-spacing: 0.5px; }
         .sub { font: 400 14px '${THEME.fontFamily}'; fill: ${THEME.textMuted}; }
         text { font-family: '${THEME.fontFamily}'; }
@@ -200,9 +200,6 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
         ${createStatRow('Total Commits', stats.viewer.contributionsCollection.totalCommitContributions, 180, 'commit')}
         ${createStatRow('Total Repos', stats.viewer.repositories.totalCount, 225, 'repo')}
         ${createStatRow('Contributed To', stats.viewer.contributionsCollection.totalRepositoryContributions, 270, 'contributed')}
-        
-        <!-- Decoration -->
-        <path d="M 340 25 L 365 25 L 365 50" stroke="${THEME.accentPrimary}" fill="none" stroke-width="2" />
       </g>
       
       <!-- Card 2: Languages (Right) -->
@@ -214,10 +211,6 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
         <g transform="translate(0, 115)">
           ${languages.map((l, i) => createLangBar(l, i * 42)).join('')}
         </g>
-        
-        <!-- Decoration -->
-        <rect x="330" y="285" width="12" height="12" fill="${THEME.accentSecondary}" />
-        <rect x="348" y="285" width="12" height="12" fill="${THEME.accentPrimary}" />
       </g>
     </svg>
   `;
