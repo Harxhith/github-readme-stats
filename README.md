@@ -1,69 +1,94 @@
-# Batman-Themed GitHub Stats
+# 🦇 Batman-Themed GitHub Stats
 
-A Vercel Serverless Function that generates dynamic, Batman-styled statistics for your GitHub Profile README.
+> A Vercel Serverless Function that generates dynamic, Batman-styled statistics for your GitHub Profile README.
 
 ![Stats Preview](api/stats)
 
 ## Features
 
 - **Batman Theme**: Deep charcoal background (`#0a0a0a`), tactical gray accents, and signature yellow highlights.
-- **core Stats**: Total Stars, Commits, Pull Requests, and Repositories.
+- **Core Stats**: Total Stars, Commits, Pull Requests, **Total Repositories**, and **Contributed To (last year)**.
 - **Top Languages**: Automatically calculated top 5 languages by code size (excluding boilerplate like HTML/CSS).
 - **Performance**: High-performance SVG generation with built-in caching (4 hours).
 
-## Setup & Deployment
+---
 
-### 1. Generate a GitHub Token
+## 🚀 How to Use (For Yourself)
 
-You need a Personal Access Token to fetch your data.
+You can easily host your own version of this stats card without writing any code.
 
-1.  Go to [GitHub Developer Settings > Personal Access Tokens](https://github.com/settings/tokens).
-2.  Generate a new **Classic** token.
-3.  Select the following scopes:
-    - `repo` (Full control of private repositories)
+### Step 1: Fork this Repository
+
+Click the **Fork** button at the top right of this page to create your own copy of this repository.
+
+### Step 2: Generate a GitHub Token
+
+You need a GitHub Personal Access Token to allow the code to fetch your stats.
+
+1.  Go to **[GitHub Developer Settings > Personal Access Tokens](https://github.com/settings/tokens)**.
+2.  Click **Generate new token (classic)**.
+3.  Name it (e.g., "Readme Stats").
+4.  **Important**: Select the following scopes:
+    - `repo` (Full control of private repositories - required to count private commits)
     - `read:user` (Read all user profile data)
-4.  Copy the token (e.g., `ghp_...`).
+5.  Click **Generate token** and **copy it** immediately.
 
-### 2. Deploy to Vercel
+### Step 3: Deploy to Vercel
 
-1.  Install the Vercel CLI (optional) or push this code to a GitHub repository.
-2.  Import the project into Vercel.
-3.  In the **Environment Variables** section of your Vercel Project Settings, add:
+1.  Go to [Vercel.com](https://vercel.com) and log in with GitHub.
+2.  Click **"Add New..."** -> **"Project"**.
+3.  Import the repository you just forked.
+4.  In the **Configure Project** screen, find the **Environment Variables** section.
+5.  Add a new variable:
     - **Key**: `GH_TOKEN`
-    - **Value**: `<PASTE_YOUR_GITHUB_TOKEN_HERE>`
-4.  Deploy!
+    - **Value**: `PASTE_YOUR_COPIED_TOKEN_HERE`
+6.  Click **Deploy**.
 
-## Usage
+### Step 4: Add to your Profile
 
-Once deployed, use the URL to your Vercel app to display the image.
+Once deployed, Vercel will give you a domain (e.g., `https://your-repo-name.vercel.app`).
 
-### In your GitHub Profile README.md:
+Add this markdown to your GitHub Profile `README.md`:
 
 ```markdown
-![My Stats](https://<your-project-name>.vercel.app/api/stats)
+![My Stats](https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats)
 ```
 
-### Local Development
+---
 
-1.  Install dependencies:
+## 🛠 Local Development
+
+If you want to modify the code or theme:
+
+1.  **Clone the repo**:
+
+    ```bash
+    git clone https://github.com/<your-username>/github-readme-stats-batman.git
+    cd github-readme-stats-batman
+    ```
+
+2.  **Install dependencies**:
+
     ```bash
     npm install
     ```
-2.  Run with Vercel CLI:
+
+3.  **Run locally** (requires Vercel CLI):
     ```bash
     vercel dev
     ```
 
-## Customization
+## 🎨 Customization
 
-You can customize the colors by editing the `THEME` object in `api/stats.ts`:
+You can change the colors in `api/stats.ts` to match your own style:
 
 ```typescript
 const THEME = {
-  bg: "#0a0a0a",
-  border: "#222222",
-  accentSecondary: "#333333",
-  accentPrimary: "#f2d41f", // Change this for a different accent color
-  // ...
+  bg: "#0a0a0a", // Background
+  border: "#222222", // Border color
+  accentSecondary: "#333333", // Secondary elements (Gray)
+  accentPrimary: "#f2d41f", // Main accent (Yellow)
+  textMain: "#e0e0e0", // Main text
+  textMuted: "#666666", // Subtitles
 };
 ```
