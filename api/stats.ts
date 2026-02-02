@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 
 // --- Types ---
+// --- Types ---
 interface RepositoryNode {
   stargazerCount: number;
   languages: {
@@ -22,6 +23,7 @@ interface UserStatsData {
     contributionsCollection: {
       totalCommitContributions: number;
       totalPullRequestContributions: number;
+      totalRepositoryContributions: number;
     };
     repositories: {
       totalCount: number;
@@ -57,6 +59,7 @@ const QUERY = `
       contributionsCollection {
         totalCommitContributions
         totalPullRequestContributions
+        totalRepositoryContributions
       }
       repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
         totalCount
@@ -132,7 +135,7 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 // --- SVG Templates ---
 const generateSVG = (stats: any, languages: LanguageStat[]) => {
   const width = 600;
-  const height = 280;
+  const height = 300;
   
   const cardStyle = `
     fill: ${THEME.bg}; 
@@ -151,7 +154,7 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
     star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="' + THEME.accentPrimary + '"/>',
     commit: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z" fill="' + THEME.accentSecondary + '"/>',
     repo: '<path d="M4 19h4v-2H4v2zm0-4h4v-2H4v2zm0-4h4V9H4v2zm0-4h4V5H4v2zm6 12h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H10c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM10 5h10v14H10V5z" fill="' + THEME.accentSecondary + '"/>',
-    pr: '<path d="M19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM17 12V3c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v14l4-4h8c.55 0 1-.45 1-1v-4z" fill="' + THEME.accentSecondary + '"/>' // Simplified symbol
+    contributed: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.39z" fill="' + THEME.accentSecondary + '"/>'
   };
 
   const createStatRow = (label: string, value: number|string, y: number, iconKey: string) => `
@@ -186,16 +189,17 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
       
       <!-- Card 1: Core Stats (Left) -->
       <g transform="translate(20, 20)">
-        <rect width="250" height="240" style="${cardStyle}" />
+        <rect width="250" height="260" style="${cardStyle}" />
         <image href="${'https://github.com/' + stats.viewer.login + '.png'}" x="20" y="20" height="50" width="50" clip-path="circle(25px)" />
         <text x="80" y="40" class="title">${stats.viewer.name}</text>
         <text x="80" y="60" class="sub">@${stats.viewer.login}</text>
         
         <line x1="20" y1="80" x2="230" y2="80" stroke="${THEME.border}" />
         
-        ${createStatRow('Stars Earned', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 110, 'star')}
-        ${createStatRow('Total Commits', stats.viewer.contributionsCollection.totalCommitContributions, 160, 'commit')}
-        ${createStatRow('Pull Requests', stats.viewer.contributionsCollection.totalPullRequestContributions, 210, 'pr')}
+        ${createStatRow('Stars Earned', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 105, 'star')}
+        ${createStatRow('Total Commits', stats.viewer.contributionsCollection.totalCommitContributions, 145, 'commit')}
+        ${createStatRow('Total Repos', stats.viewer.repositories.totalCount, 185, 'repo')}
+        ${createStatRow('Contributed To', stats.viewer.contributionsCollection.totalRepositoryContributions, 225, 'contributed')}
         
         <!-- Decoration -->
         <path d="M 230 20 L 250 20 L 250 40" stroke="${THEME.accentPrimary}" fill="none" stroke-width="2" />
@@ -203,7 +207,7 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
       
       <!-- Card 2: Languages (Right) -->
       <g transform="translate(290, 20)">
-        <rect width="290" height="240" style="${cardStyle}" />
+        <rect width="290" height="260" style="${cardStyle}" />
         <text x="20" y="40" class="title">TOP LANGUAGES</text>
         <line x1="20" y1="60" x2="270" y2="60" stroke="${THEME.border}" />
         
@@ -212,8 +216,8 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
         </g>
         
         <!-- Decoration -->
-        <rect x="260" y="220" width="10" height="10" fill="${THEME.accentSecondary}" />
-        <rect x="274" y="220" width="10" height="10" fill="${THEME.accentPrimary}" />
+        <rect x="260" y="240" width="10" height="10" fill="${THEME.accentSecondary}" />
+        <rect x="274" y="240" width="10" height="10" fill="${THEME.accentPrimary}" />
       </g>
     </svg>
   `;
