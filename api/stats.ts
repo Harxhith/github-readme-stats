@@ -61,7 +61,7 @@ const QUERY = `
         totalPullRequestContributions
         totalRepositoryContributions
       }
-      repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
+      repositories(first: 100, ownerAffiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR], isFork: false) {
         totalCount
         nodes {
           stargazerCount
