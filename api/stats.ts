@@ -47,7 +47,7 @@ const THEME = {
   accentPrimary: '#f2d41f',   // Batman Yellow
   textMain: '#e0e0e0',
   textMuted: '#666666',
-  fontFamily: "'Segoe UI', Ubuntu, sans-serif",
+  fontFamily: "'Figtree', 'Inter', 'Segoe UI', Ubuntu, sans-serif",
 };
 
 // --- GraphQL Query ---
@@ -134,19 +134,14 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 
 // --- SVG Templates ---
 const generateSVG = (stats: any, languages: LanguageStat[]) => {
-  const width = 600;
-  const height = 300;
+  const width = 800;
+  const height = 360;
   
   const cardStyle = `
     fill: ${THEME.bg}; 
     stroke: ${THEME.border}; 
     stroke-width: 1px;
-    rx: 2;
-  `;
-
-  const textStyle = `
-    font-family: ${THEME.fontFamily};
-    fill: ${THEME.textMain};
+    rx: 4;
   `;
 
   // Icons (Simple paths for utilitarian look)
@@ -158,66 +153,71 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
   };
 
   const createStatRow = (label: string, value: number|string, y: number, iconKey: string) => `
-    <g transform="translate(30, ${y})">
-       <!-- Icon placeholder area -->
-       <g transform="scale(0.8) translate(0, -4)">${(icons as any)[iconKey] || ''}</g>
-       <text x="35" y="10" font-size="14" font-weight="bold" fill="${THEME.accentPrimary}">${value}</text>
-       <text x="35" y="26" font-size="10" fill="${THEME.textMuted}" letter-spacing="1">${label.toUpperCase()}</text>
+    <g transform="translate(40, ${y})">
+       <!-- Icon -->
+       <g transform="scale(1.2) translate(-4, -4)">${(icons as any)[iconKey] || ''}</g>
+       <text x="45" y="12" font-size="20" font-weight="bold" fill="${THEME.accentPrimary}">${value}</text>
+       <text x="45" y="32" font-size="12" fill="${THEME.textMuted}" letter-spacing="1.2" font-weight="500">${label.toUpperCase()}</text>
     </g>
   `;
 
   const createLangBar = (lang: LanguageStat, y: number) => `
-    <g transform="translate(20, ${y})">
-      <text x="0" y="0" font-size="12" fill="${THEME.textMain}" font-weight="600">${lang.name}</text>
-      <text x="230" y="0" font-size="12" fill="${THEME.textMuted}" text-anchor="end">${lang.percentage}%</text>
+    <g transform="translate(30, ${y})">
+       <text x="0" y="0" font-size="14" fill="${THEME.textMain}" font-weight="600">${lang.name}</text>
+      <text x="310" y="0" font-size="14" fill="${THEME.textMuted}" text-anchor="end">${lang.percentage}%</text>
       
       <!-- Bar Background -->
-      <rect x="0" y="6" width="230" height="6" fill="${THEME.accentSecondary}" rx="2" />
+      <rect x="0" y="8" width="310" height="8" fill="${THEME.accentSecondary}" rx="3" />
       <!-- Bar Progress -->
-      <rect x="0" y="6" width="${(lang.percentage / 100) * 230}" height="6" fill="${lang.color || THEME.accentPrimary}" rx="2" />
+      <rect x="0" y="8" width="${(lang.percentage / 100) * 310}" height="8" fill="${lang.color || THEME.accentPrimary}" rx="3" />
     </g>
   `;
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <style>
-        .title { font: 600 18px 'Segoe UI', Ubuntu, sans-serif; fill: ${THEME.textMain}; letter-spacing: 0.5px; }
-        .sub { font: 400 12px 'Segoe UI', Ubuntu, sans-serif; fill: ${THEME.textMuted}; }
+        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap');
+        .title { font: 700 22px '${THEME.fontFamily}'; fill: ${THEME.textMain}; letter-spacing: 0.5px; }
+        .sub { font: 400 14px '${THEME.fontFamily}'; fill: ${THEME.textMuted}; }
+        text { font-family: '${THEME.fontFamily}'; }
       </style>
       
-      <rect width="100%" height="100%" fill="${THEME.bg}" rx="6" />
+      <rect width="100%" height="100%" fill="${THEME.bg}" rx="10" />
       
       <!-- Card 1: Core Stats (Left) -->
-      <g transform="translate(20, 20)">
-        <rect width="250" height="260" style="${cardStyle}" />
-        <image href="${'https://github.com/' + stats.viewer.login + '.png'}" x="20" y="20" height="50" width="50" clip-path="circle(25px)" />
-        <text x="80" y="40" class="title">${stats.viewer.name}</text>
-        <text x="80" y="60" class="sub">@${stats.viewer.login}</text>
+      <g transform="translate(25, 25)">
+        <rect width="365" height="310" style="${cardStyle}" />
         
-        <line x1="20" y1="80" x2="230" y2="80" stroke="${THEME.border}" />
+        <!-- Header -->
+        <image href="${'https://github.com/' + stats.viewer.login + '.png'}" x="25" y="25" height="60" width="60" clip-path="circle(30px)" />
+        <text x="100" y="52" class="title">${stats.viewer.name}</text>
+        <text x="100" y="75" class="sub">@${stats.viewer.login}</text>
         
-        ${createStatRow('Stars Earned', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 105, 'star')}
-        ${createStatRow('Total Commits', stats.viewer.contributionsCollection.totalCommitContributions, 145, 'commit')}
-        ${createStatRow('Total Repos', stats.viewer.repositories.totalCount, 185, 'repo')}
-        ${createStatRow('Contributed To', stats.viewer.contributionsCollection.totalRepositoryContributions, 225, 'contributed')}
+        <line x1="25" y1="100" x2="340" y2="100" stroke="${THEME.border}" />
+        
+        <!-- Stats -->
+        ${createStatRow('Stars Earned', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 135, 'star')}
+        ${createStatRow('Total Commits', stats.viewer.contributionsCollection.totalCommitContributions, 180, 'commit')}
+        ${createStatRow('Total Repos', stats.viewer.repositories.totalCount, 225, 'repo')}
+        ${createStatRow('Contributed To', stats.viewer.contributionsCollection.totalRepositoryContributions, 270, 'contributed')}
         
         <!-- Decoration -->
-        <path d="M 230 20 L 250 20 L 250 40" stroke="${THEME.accentPrimary}" fill="none" stroke-width="2" />
+        <path d="M 340 25 L 365 25 L 365 50" stroke="${THEME.accentPrimary}" fill="none" stroke-width="2" />
       </g>
       
       <!-- Card 2: Languages (Right) -->
-      <g transform="translate(290, 20)">
-        <rect width="290" height="260" style="${cardStyle}" />
-        <text x="20" y="40" class="title">TOP LANGUAGES</text>
-        <line x1="20" y1="60" x2="270" y2="60" stroke="${THEME.border}" />
+      <g transform="translate(410, 25)">
+        <rect width="365" height="310" style="${cardStyle}" />
+        <text x="25" y="55" class="title">TOP LANGUAGES</text>
+        <line x1="25" y1="80" x2="340" y2="80" stroke="${THEME.border}" />
         
-        <g transform="translate(0, 90)">
-          ${languages.map((l, i) => createLangBar(l, i * 35)).join('')}
+        <g transform="translate(0, 115)">
+          ${languages.map((l, i) => createLangBar(l, i * 42)).join('')}
         </g>
         
         <!-- Decoration -->
-        <rect x="260" y="240" width="10" height="10" fill="${THEME.accentSecondary}" />
-        <rect x="274" y="240" width="10" height="10" fill="${THEME.accentPrimary}" />
+        <rect x="330" y="285" width="12" height="12" fill="${THEME.accentSecondary}" />
+        <rect x="348" y="285" width="12" height="12" fill="${THEME.accentPrimary}" />
       </g>
     </svg>
   `;
