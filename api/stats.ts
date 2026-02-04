@@ -142,10 +142,11 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 
   const totalSize = sorted.reduce((acc, lang) => acc + lang.size, 0);
 
-  // Fallback palette for languages without colors
+  // Extended vibrant palette for distinct language colors
   const fallbackColors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98FB98', 
-    '#DDA0DD', '#FFD700', '#FF69B4', '#00CED1', '#ADFF2F'
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98FB98', '#DDA0DD', '#FFD700', '#FF69B4', '#00CED1', '#ADFF2F',
+    '#FF4500', '#2E8B57', '#8A2BE2', '#DC143C', '#00FA9A', '#1E90FF', '#FF00FF', '#FFFF00', '#00FFFF', '#FF1493',
+    '#7FFF00', '#9932CC', '#FF8C00', '#00BFFF', '#BA55D3', '#FF0000', '#32CD32', '#9400D3', '#00FF7F', '#40E0D0'
   ];
 
   return sorted.map((lang, index) => ({
@@ -160,15 +161,28 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
   const width = 850;
   
   // Dynamic Height Calculation
-  const MIN_HEIGHT = 360;
-  const LEGEND_ROW_HEIGHT = 30;
-  const LEGEND_START_Y = 100; // Moved up from 150
+  // Dynamic Height Calculation
+  const PROFILE_CARD_HEIGHT = 100;
+  const OVERVIEW_CARD_HEIGHT = 180;
+  const GAP = 20;
+  const PADDING = 30; // Outer padding
+  
+  const leftColumnHeight = PROFILE_CARD_HEIGHT + GAP + OVERVIEW_CARD_HEIGHT;
+  
+  const LEGEND_ROW_HEIGHT = 25; // Compacted from 30
+  const LEGEND_START_Y = 90; // Moved up slightly more
   const CARD_PADDING_BOTTOM = 20;
   
   const legendRows = Math.ceil(languages.length / 2);
-  const requiredLegendHeight = legendRows * LEGEND_ROW_HEIGHT;
-  const rightCardHeight = Math.max(300, LEGEND_START_Y + requiredLegendHeight + CARD_PADDING_BOTTOM);
-  const height = Math.max(MIN_HEIGHT, rightCardHeight + 60);
+  const requiredRightCardHeight = LEGEND_START_Y + (legendRows * LEGEND_ROW_HEIGHT) + CARD_PADDING_BOTTOM;
+  
+  // Ensure both columns match in visual balance if right is smaller, but allow expansion if larger
+  const rightCardHeight = Math.max(leftColumnHeight, requiredRightCardHeight);
+  
+  const height = Math.max(leftColumnHeight, rightCardHeight) + (PADDING * 2);
+  // Width logic: 850 total. PADDING left 30.
+  // Profile/Overview: 380 each. Right Card: 380 each.
+  // Gap between cols: 430 - (30+380) = 20. Correct.
   
   // Icons made with gradients
   const icons = {
@@ -253,12 +267,13 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
       </style>
       
       <!-- Main Background -->
+      <!-- Main Background -->
       <rect x="2" y="2" width="${width - 4}" height="${height - 4}" fill="${THEME.bg}" rx="16" stroke="${(THEME as any).neonBorder}" stroke-width="3" />
       
       <!-- Bento Grid Layout -->
       
       <!-- 1. Profile Card (Top Left) -->
-      <g transform="translate(30, 30)">
+      <g transform="translate(30, ${PADDING})">
         <rect width="380" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         
         <image href="${avatarBase64}" x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
@@ -267,7 +282,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
       </g>
       
       <!-- 2. Core Stats Grid (Bottom Left) -->
-      <g transform="translate(30, 150)">
+      <g transform="translate(30, ${PADDING + 100 + GAP})">
         <rect width="380" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         <text x="20" y="35" class="section-title" fill="${THEME.textMuted}">Overview</text>
 
@@ -280,7 +295,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
       </g>
       
       <!-- 3. Languages Card (Right) -->
-      <g transform="translate(430, 30)">
+      <g transform="translate(430, ${PADDING})">
          <rect width="390" height="${rightCardHeight}" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
          
          <text x="20" y="35" class="section-title">Top Languages</text>
