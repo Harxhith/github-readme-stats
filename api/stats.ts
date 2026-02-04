@@ -49,7 +49,7 @@ const THEME = {
   neonBorder: '#39ff14',      // Neon Green
   textMain: '#ffffff',
   textMuted: '#888888',
-  fontFamily: "'Inter'",
+  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 };
 
 // --- GraphQL Query ---
