@@ -227,13 +227,13 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
       </style>
       
       <!-- Main Background -->
-      <rect width="100%" height="100%" fill="${THEME.bg}" rx="12" />
+      <rect x="1.5" y="1.5" width="${width - 3}" height="${height - 3}" fill="${THEME.bg}" rx="12" stroke="${(THEME as any).neonBorder}" stroke-width="3" />
       
       <!-- Card 1: Core Stats (Left) -->
       <g transform="translate(25, 25)">
         <!-- Card Background with Gradient Border Effect -->
-        <rect x="-2" y="-2" width="369" height="314" rx="10" fill="${(THEME as any).neonBorder}" opacity="0.2" filter="url(#glow)" />
-        <rect width="365" height="310" rx="8" fill="url(#cardGrad)" stroke="${(THEME as any).neonBorder}" stroke-width="2.5" />
+        <rect x="-1" y="-1" width="367" height="312" rx="9" fill="url(#grad1)" opacity="0.3" />
+        <rect width="365" height="310" rx="8" fill="url(#cardGrad)" stroke="#333" stroke-width="0.5" />
         
         <!-- Header -->
         <image href="${'https://github.com/' + stats.viewer.login + '.png'}" x="25" y="25" height="60" width="60" clip-path="circle(30px)" />
@@ -252,8 +252,8 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
       <!-- Card 2: Languages (Right) -->
       <g transform="translate(410, 25)">
         <!-- Card Background -->
-         <rect x="-2" y="-2" width="369" height="314" rx="10" fill="${(THEME as any).neonBorder}" opacity="0.2" filter="url(#glow)" />
-        <rect width="365" height="310" rx="8" fill="url(#cardGrad)" stroke="${(THEME as any).neonBorder}" stroke-width="2.5" />
+         <rect x="-1" y="-1" width="367" height="312" rx="9" fill="url(#grad2)" opacity="0.3" />
+        <rect width="365" height="310" rx="8" fill="url(#cardGrad)" stroke="#333" stroke-width="0.5" />
         
         <text x="25" y="55" class="title">Top Languages</text>
         <line x1="25" y1="80" x2="340" y2="80" stroke="#333" stroke-width="1" />
