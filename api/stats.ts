@@ -48,7 +48,7 @@ const THEME = {
   accentSecondary: '#bd00ff', // Neon Purple
   textMain: '#ffffff',
   textMuted: '#888888',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "'Inter'",
 };
 
 // --- GraphQL Query ---
