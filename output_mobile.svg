@@ -1,0 +1,118 @@
+
+    <svg width="440" height="515" viewBox="0 0 440 515" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#00f2ff;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#bd00ff;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+           <stop offset="0%" style="stop-color:#bd00ff;stop-opacity:1" />
+           <stop offset="100%" style="stop-color:#00f2ff;stop-opacity:1" />
+        </linearGradient>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <clipPath id="bar-inner">
+             <rect width="365" height="12" rx="4" />
+         </clipPath>
+      </defs>
+
+      <style>
+        .title { font-weight: 700; font-size: 20px; fill: #ffffff; letter-spacing: -0.5px; }
+        .handle { font-weight: 400; font-size: 14px; fill: #00f2ff; }
+        .section-title { font-weight: 600; font-size: 16px; fill: #ffffff; letter-spacing: 0.5px; text-transform: uppercase; }
+        text { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      </style>
+      
+      <!-- Main Background -->
+      <rect x="2" y="2" width="436" height="511" fill="#050505" rx="16" stroke="#1ec500ff" stroke-width="3" />
+      
+      <!-- Bento Grid Layout -->
+      
+      <!-- 1. Profile Card (Top Left or Top) -->
+      <g transform="translate(30, 30)">
+        <rect width="380" height="100" rx="8" fill="#0a0a0a" stroke="#333" stroke-width="1" />
+        
+        <image href="data:image/png;base64," x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
+        <text x="100" y="46" class="title">Test User</text>
+        <text x="100" y="71" class="handle">@testuser</text>
+      </g>
+      
+      <!-- 2. Core Stats Grid (Bottom Left or Middle) -->
+      <g transform="translate(30, 150)">
+        <rect width="380" height="180" rx="8" fill="#0a0a0a" stroke="#333" stroke-width="1" />
+        <text x="20" y="35" class="section-title" fill="#888888">Overview</text>
+
+        <!-- 2x2 Grid -->
+        
+    <g transform="translate(20, 70)">
+       <g transform="scale(1.5) translate(0, 0)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#grad1)"/></g>
+       <text x="45" y="16" font-weight="700" font-size="20" fill="#ffffff" style="filter: url(#glow)">15</text>
+       <text x="45" y="36" font-size="11" fill="#888888" letter-spacing="0.5" font-weight="500">STARS</text>
+    </g>
+  
+        
+    <g transform="translate(190, 70)">
+       <g transform="scale(1.5) translate(0, 0)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z" fill="url(#grad2)"/></g>
+       <text x="45" y="16" font-weight="700" font-size="20" fill="#ffffff" style="filter: url(#glow)">100</text>
+       <text x="45" y="36" font-size="11" fill="#888888" letter-spacing="0.5" font-weight="500">COMMITS</text>
+    </g>
+  
+        
+    <g transform="translate(20, 130)">
+       <g transform="scale(1.5) translate(0, 0)"><path d="M4 19h4v-2H4v2zm0-4h4v-2H4v2zm0-4h4V9H4v2zm0-4h4V5H4v2zm6 12h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H10c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM10 5h10v14H10V5z" fill="url(#grad2)"/></g>
+       <text x="45" y="16" font-weight="700" font-size="20" fill="#ffffff" style="filter: url(#glow)">10</text>
+       <text x="45" y="36" font-size="11" fill="#888888" letter-spacing="0.5" font-weight="500">REPOS</text>
+    </g>
+  
+        
+    <g transform="translate(190, 130)">
+       <g transform="scale(1.5) translate(0, 0)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.39z" fill="url(#grad2)"/></g>
+       <text x="45" y="16" font-weight="700" font-size="20" fill="#ffffff" style="filter: url(#glow)">20</text>
+       <text x="45" y="36" font-size="11" fill="#888888" letter-spacing="0.5" font-weight="500">CONTRIBUTED</text>
+    </g>
+  
+      </g>
+      
+      <!-- 3. Languages Card (Right or Bottom) -->
+      <g transform="translate(30, 350)">
+         <rect width="380" height="135" rx="8" fill="#0a0a0a" stroke="#333" stroke-width="1" />
+         
+         <text x="20" y="35" class="section-title">Top Languages</text>
+
+         <!-- Bar -->
+         <g transform="translate(12, 60)" clip-path="url(#bar-inner)">
+            
+      <g transform="translate(0, 0)">
+        <!-- Background -->
+        <rect x="0" y="0" width="365" height="12" fill="#222" rx="4" />
+        <!-- Segments -->
+        <rect x="0" y="0" width="243.08999999999997" height="12" fill="#3178c6" first="true" /><rect x="243.08999999999997" y="0" width="121.54499999999999" height="12" fill="#f1e05a" first="false" />
+        <!-- Mask for rounded corners -->
+        <use href="#bar-mask" />
+      </g>
+    
+         </g>
+         
+         <!-- Legend -->
+         <g transform="translate(20, 100)">
+            
+        <g transform="translate(0, 0)">
+          <circle cx="6" cy="6" r="6" fill="#3178c6" />
+          <text x="20" y="10" font-size="14" fill="#ffffff" font-weight="500">TypeScript <tspan fill="#888888" font-weight="400">66.6%</tspan></text>
+        </g>
+      
+        <g transform="translate(170, 0)">
+          <circle cx="6" cy="6" r="6" fill="#f1e05a" />
+          <text x="20" y="10" font-size="14" fill="#ffffff" font-weight="500">JavaScript <tspan fill="#888888" font-weight="400">33.3%</tspan></text>
+        </g>
+      
+         </g>
+      </g>
+
+    </svg>
+  

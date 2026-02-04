@@ -157,32 +157,55 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 };
 
 // --- SVG Templates ---
-const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string) => {
-  const width = 850;
-  
-  // Dynamic Height Calculation
-  // Dynamic Height Calculation
+export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string, options: { isMobile?: boolean } = {}) => {
+  const { isMobile = false } = options;
+
+  const PADDING = 30; // Outer padding
+  const GAP = 20;
+
+  // Dimensions
+  const PROFILE_CARD_WIDTH = 380;
   const PROFILE_CARD_HEIGHT = 100;
   const OVERVIEW_CARD_HEIGHT = 180;
-  const GAP = 20;
-  const PADDING = 30; // Outer padding
+  const BORDER_WIDTH = 1; // Stroke width
   
-  const leftColumnHeight = PROFILE_CARD_HEIGHT + GAP + OVERVIEW_CARD_HEIGHT;
-  
-  const LEGEND_ROW_HEIGHT = 25; // Compacted from 30
-  const LEGEND_START_Y = 90; // Moved up slightly more
+  // Calculate height for Language Card
+  const LEGEND_ROW_HEIGHT = 25;
+  const LEGEND_START_Y = 90;
   const CARD_PADDING_BOTTOM = 20;
-  
   const legendRows = Math.ceil(languages.length / 2);
   const requiredRightCardHeight = LEGEND_START_Y + (legendRows * LEGEND_ROW_HEIGHT) + CARD_PADDING_BOTTOM;
   
-  // Ensure both columns match in visual balance if right is smaller, but allow expansion if larger
-  const rightCardHeight = Math.max(leftColumnHeight, requiredRightCardHeight);
-  
-  const height = Math.max(leftColumnHeight, rightCardHeight) + (PADDING * 2);
-  // Width logic: 850 total. PADDING left 30.
-  // Profile/Overview: 380 each. Right Card: 380 each.
-  // Gap between cols: 430 - (30+380) = 20. Correct.
+  // Desktop specific calcs
+  const leftColumnHeight = PROFILE_CARD_HEIGHT + GAP + OVERVIEW_CARD_HEIGHT;
+  const desktopRightCardHeight = Math.max(leftColumnHeight, requiredRightCardHeight);
+
+  // Layout Logic
+  let width, height;
+  let profilePos, overviewPos, langPos;
+  let langCardHeight; // Height of the language card specifically
+
+  if (isMobile) {
+    // Stacked Layout
+    width = PADDING * 2 + PROFILE_CARD_WIDTH; // 30 + 380 + 30 = 440
+    
+    // Positions
+    profilePos = { x: PADDING, y: PADDING };
+    overviewPos = { x: PADDING, y: PADDING + PROFILE_CARD_HEIGHT + GAP };
+    langPos = { x: PADDING, y: PADDING + PROFILE_CARD_HEIGHT + GAP + OVERVIEW_CARD_HEIGHT + GAP };
+    
+    langCardHeight = requiredRightCardHeight; // Use natural height
+    height = langPos.y + langCardHeight + PADDING;
+  } else {
+    // Wide Layout (Default)
+    width = 850;
+    langCardHeight = desktopRightCardHeight;
+    height = Math.max(leftColumnHeight, langCardHeight) + (PADDING * 2);
+
+    profilePos = { x: 30, y: PADDING };
+    overviewPos = { x: 30, y: PADDING + 100 + GAP };
+    langPos = { x: 430, y: PADDING }; 
+  }
   
   // Icons made with gradients
   const icons = {
@@ -267,13 +290,12 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
       </style>
       
       <!-- Main Background -->
-      <!-- Main Background -->
       <rect x="2" y="2" width="${width - 4}" height="${height - 4}" fill="${THEME.bg}" rx="16" stroke="${(THEME as any).neonBorder}" stroke-width="3" />
       
       <!-- Bento Grid Layout -->
       
-      <!-- 1. Profile Card (Top Left) -->
-      <g transform="translate(30, ${PADDING})">
+      <!-- 1. Profile Card (Top Left or Top) -->
+      <g transform="translate(${profilePos.x}, ${profilePos.y})">
         <rect width="380" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         
         <image href="${avatarBase64}" x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
@@ -281,12 +303,11 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
         <text x="100" y="71" class="handle">@${stats.viewer.login}</text>
       </g>
       
-      <!-- 2. Core Stats Grid (Bottom Left) -->
-      <g transform="translate(30, ${PADDING + 100 + GAP})">
+      <!-- 2. Core Stats Grid (Bottom Left or Middle) -->
+      <g transform="translate(${overviewPos.x}, ${overviewPos.y})">
         <rect width="380" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         <text x="20" y="35" class="section-title" fill="${THEME.textMuted}">Overview</text>
 
-        
         <!-- 2x2 Grid -->
         ${createStatItem('Stars', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 20, 70, 'star')}
         ${createStatItem('Commits', stats.viewer.contributionsCollection.totalCommitContributions, 190, 70, 'commit')}
@@ -294,13 +315,12 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
         ${createStatItem('Contributed', stats.viewer.contributionsCollection.totalRepositoryContributions, 190, 130, 'contributed')}
       </g>
       
-      <!-- 3. Languages Card (Right) -->
-      <g transform="translate(430, ${PADDING})">
-         <rect width="390" height="${rightCardHeight}" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+      <!-- 3. Languages Card (Right or Bottom) -->
+      <g transform="translate(${langPos.x}, ${langPos.y})">
+         <rect width="380" height="${langCardHeight}" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
          
          <text x="20" y="35" class="section-title">Top Languages</text>
 
-         
          <!-- Bar -->
          <g transform="translate(12, 60)" clip-path="url(#bar-inner)">
             ${createSegmentedBar(languages, 365, 0)}
@@ -319,6 +339,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
 // --- Main Handler ---
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.GH_TOKEN;
+  const isMobile = req.query.layout === 'mobile';
 
   if (!token) {
     return res.status(500).send('Error: GH_TOKEN is missing');
@@ -332,7 +353,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const avatarUrl = 'https://github.com/' + data.viewer.login + '.png';
     const avatarBase64 = await fetchBase64Image(avatarUrl);
 
-    const svg = generateSVG(data, languages, avatarBase64);
+    const svg = generateSVG(data, languages, avatarBase64, { isMobile });
 
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 'public, max-age=14400, s-maxage=14400'); // 4 hours
