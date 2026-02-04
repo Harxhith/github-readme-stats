@@ -49,7 +49,7 @@ const THEME = {
   neonBorder: '#39ff14',      // Neon Green
   textMain: '#ffffff',
   textMuted: '#888888',
-  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 };
 
 // --- GraphQL Query ---
@@ -151,7 +151,7 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
     <g transform="translate(40, ${y})">
        <!-- Icon -->
        <g transform="scale(1.3) translate(-4, -4)">${(icons as any)[iconKey] || ''}</g>
-       <text x="50" y="12" font-size="20" font-weight="700" fill="${THEME.textMain}" style="filter: url(#glow)">${value}</text>
+       <text x="50" y="12" font-weight="700" font-size="20" fill="${THEME.textMain}" style="filter: url(#glow)">${value}</text>
        <text x="50" y="32" font-size="12" fill="${THEME.textMuted}" letter-spacing="0.5" font-weight="500">${label.toUpperCase()}</text>
     </g>
   `;
@@ -221,9 +221,9 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
 
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
-        .title { font: 700 22px '${THEME.fontFamily}'; fill: ${THEME.textMain}; letter-spacing: -0.5px; }
-        .sub { font: 500 14px '${THEME.fontFamily}'; fill: ${THEME.accentPrimary}; }
-        text { font-family: '${THEME.fontFamily}'; }
+        .title { font-weight: 700; font-size: 22px; fill: ${THEME.textMain}; letter-spacing: -0.5px; }
+        .sub { font-weight: 500; font-size: 14px; fill: ${THEME.accentPrimary}; }
+        text { font-family: ${THEME.fontFamily}; }
       </style>
       
       <!-- Main Background -->
