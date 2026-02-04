@@ -102,6 +102,18 @@ const fetchGitHubStats = async (token: string): Promise<UserStatsData> => {
   return response.data.data;
 };
 
+const fetchBase64Image = async (url: string): Promise<string> => {
+  try {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const buffer = Buffer.from(response.data, 'binary');
+    const contentType = response.headers['content-type'];
+    return `data:${contentType};base64,${buffer.toString('base64')}`;
+  } catch (e) {
+    console.error('Failed to fetch image', e);
+    return ''; // Fallback or empty
+  }
+};
+
 const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
   const langMap = new Map<string, { size: number; color: string }>();
 
@@ -135,8 +147,8 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 };
 
 // --- SVG Templates ---
-const generateSVG = (stats: any, languages: LanguageStat[]) => {
-  const width = 800;
+const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string) => {
+  const width = 850;
   const height = 360;
   
   // Icons made with gradients
@@ -147,12 +159,11 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
     contributed: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.39z" fill="url(#grad2)"/>'
   };
 
-  const createStatRow = (label: string, value: number|string, y: number, iconKey: string) => `
-    <g transform="translate(40, ${y})">
-       <!-- Icon -->
-       <g transform="scale(1.3) translate(-4, -4)">${(icons as any)[iconKey] || ''}</g>
-       <text x="50" y="12" font-weight="700" font-size="20" fill="${THEME.textMain}" style="filter: url(#glow)">${value}</text>
-       <text x="50" y="32" font-size="12" fill="${THEME.textMuted}" letter-spacing="0.5" font-weight="500">${label.toUpperCase()}</text>
+  const createStatItem = (label: string, value: number|string, x: number, y: number, iconKey: string) => `
+    <g transform="translate(${x}, ${y})">
+       <g transform="scale(1.5) translate(0, 0)">${(icons as any)[iconKey] || ''}</g>
+       <text x="45" y="16" font-weight="700" font-size="20" fill="${THEME.textMain}" style="filter: url(#glow)">${value}</text>
+       <text x="45" y="36" font-size="11" fill="${THEME.textMuted}" letter-spacing="0.5" font-weight="500">${label.toUpperCase()}</text>
     </g>
   `;
 
@@ -162,11 +173,11 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
     return `
       <g transform="translate(0, ${y})">
         <!-- Background -->
-        <rect x="0" y="0" width="${width}" height="10" fill="#222" rx="4" />
+        <rect x="0" y="0" width="${width}" height="12" fill="#222" rx="4" />
         <!-- Segments -->
         ${languages.map(lang => {
           const segWidth = (lang.percentage / 100) * width;
-          const rect = `<rect x="${currentX}" y="0" width="${segWidth}" height="10" fill="${lang.color || THEME.accentPrimary}" first="${currentX === 0}" />`;
+          const rect = `<rect x="${currentX}" y="0" width="${segWidth}" height="12" fill="${lang.color || THEME.accentPrimary}" first="${currentX === 0}" />`;
           currentX += segWidth;
           return rect;
         }).join('')}
@@ -180,13 +191,13 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
     return languages.map((lang, i) => {
       const col = i % 2; // 0 or 1
       const row = Math.floor(i / 2);
-      const xPos = x + (col * 160); // 2nd column offset
-      const yPos = y + (row * 28);
+      const xPos = x + (col * 170); 
+      const yPos = y + (row * 30);
 
       return `
         <g transform="translate(${xPos}, ${yPos})">
-          <circle cx="5" cy="5" r="5" fill="${lang.color || THEME.accentPrimary}" />
-          <text x="15" y="9" font-size="14" fill="${THEME.textMain}" font-weight="500">${lang.name} <tspan fill="${THEME.textMuted}" font-weight="400">${lang.percentage}%</tspan></text>
+          <circle cx="6" cy="6" r="6" fill="${lang.color || THEME.accentPrimary}" />
+          <text x="20" y="10" font-size="14" fill="${THEME.textMain}" font-weight="500">${lang.name} <tspan fill="${THEME.textMuted}" font-weight="400">${lang.percentage}%</tspan></text>
         </g>
       `;
     }).join('');
@@ -203,10 +214,6 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
            <stop offset="0%" style="stop-color:${THEME.accentSecondary};stop-opacity:1" />
            <stop offset="100%" style="stop-color:${THEME.accentPrimary};stop-opacity:1" />
         </linearGradient>
-        <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-           <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
-           <stop offset="100%" style="stop-color:#0d0d0d;stop-opacity:1" />
-        </linearGradient>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
           <feMerge>
@@ -215,59 +222,62 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
           </feMerge>
         </filter>
         <clipPath id="bar-inner">
-             <rect width="315" height="10" rx="4" />
+             <rect width="365" height="12" rx="4" />
          </clipPath>
       </defs>
 
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
-        .title { font-weight: 700; font-size: 22px; fill: ${THEME.textMain}; letter-spacing: -0.5px; }
-        .sub { font-weight: 500; font-size: 14px; fill: ${THEME.accentPrimary}; }
+        .title { font-weight: 700; font-size: 20px; fill: ${THEME.textMain}; letter-spacing: -0.5px; }
+        .handle { font-weight: 400; font-size: 14px; fill: ${THEME.accentPrimary}; }
+        .section-title { font-weight: 600; font-size: 16px; fill: ${THEME.textMain}; letter-spacing: 0.5px; text-transform: uppercase; }
         text { font-family: ${THEME.fontFamily}; }
       </style>
       
       <!-- Main Background -->
-      <rect x="1.5" y="1.5" width="${width - 3}" height="${height - 3}" fill="${THEME.bg}" rx="12" stroke="${(THEME as any).neonBorder}" stroke-width="3" />
+      <rect x="2" y="2" width="${width - 4}" height="${height - 4}" fill="${THEME.bg}" rx="16" stroke="${(THEME as any).neonBorder}" stroke-width="3" />
       
-      <!-- Card 1: Core Stats (Left) -->
-      <g transform="translate(25, 25)">
-        <!-- Card Background with Gradient Border Effect -->
-        <rect x="-1" y="-1" width="367" height="312" rx="9" fill="url(#grad1)" opacity="0.3" />
-        <rect width="365" height="310" rx="8" fill="url(#cardGrad)" stroke="#333" stroke-width="0.5" />
+      <!-- Bento Grid Layout -->
+      
+      <!-- 1. Profile Card (Top Left) -->
+      <g transform="translate(30, 30)">
+        <rect width="380" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         
-        <!-- Header -->
-        <image href="${'https://github.com/' + stats.viewer.login + '.png'}" x="25" y="25" height="60" width="60" clip-path="circle(30px)" />
-        <text x="100" y="52" class="title">${stats.viewer.name}</text>
-        <text x="100" y="75" class="sub">@${stats.viewer.login}</text>
-        
-        <line x1="25" y1="100" x2="340" y2="100" stroke="#333" stroke-width="1" />
-        
-        <!-- Stats -->
-        ${createStatRow('Stars Earned', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 135, 'star')}
-        ${createStatRow('Total Commits', stats.viewer.contributionsCollection.totalCommitContributions, 180, 'commit')}
-        ${createStatRow('Total Repos', stats.viewer.repositories.totalCount, 225, 'repo')}
-        ${createStatRow('Contributed To', stats.viewer.contributionsCollection.totalRepositoryContributions, 270, 'contributed')}
+        <image href="${avatarBase64}" x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
+        <text x="100" y="45" class="title">${stats.viewer.name}</text>
+        <text x="100" y="70" class="handle">@${stats.viewer.login}</text>
       </g>
       
-      <!-- Card 2: Languages (Right) -->
-      <g transform="translate(410, 25)">
-        <!-- Card Background -->
-         <rect x="-1" y="-1" width="367" height="312" rx="9" fill="url(#grad2)" opacity="0.3" />
-        <rect width="365" height="310" rx="8" fill="url(#cardGrad)" stroke="#333" stroke-width="0.5" />
+      <!-- 2. Core Stats Grid (Bottom Left) -->
+      <g transform="translate(30, 150)">
+        <rect width="380" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+        <text x="20" y="30" class="section-title" fill="${THEME.textMuted}">Overview</text>
+        <line x1="20" y1="45" x2="360" y2="45" stroke="#333" stroke-width="1" />
         
-        <text x="25" y="55" class="title">Top Languages</text>
-        <line x1="25" y1="80" x2="340" y2="80" stroke="#333" stroke-width="1" />
-        
-        <!-- Segmented Bar -->
-        <g transform="translate(25, 120)" clip-path="url(#bar-inner)">
-             ${createSegmentedBar(languages, 315, 0)}
-        </g>
+        <!-- 2x2 Grid -->
+        ${createStatItem('Stars', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 20, 70, 'star')}
+        ${createStatItem('Commits', stats.viewer.contributionsCollection.totalCommitContributions, 190, 70, 'commit')}
+        ${createStatItem('Repos', stats.viewer.repositories.totalCount, 20, 130, 'repo')}
+        ${createStatItem('Contributed', stats.viewer.contributionsCollection.totalRepositoryContributions, 190, 130, 'contributed')}
+      </g>
+      
+      <!-- 3. Languages Card (Right) -->
+      <g transform="translate(430, 30)">
+         <rect width="390" height="300" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+         
+         <text x="20" y="35" class="section-title">Top Languages</text>
+         <line x1="20" y1="50" x2="370" y2="50" stroke="#333" stroke-width="1" />
+         
+         <!-- Bar -->
+         <g transform="translate(12, 100)" clip-path="url(#bar-inner)">
+            ${createSegmentedBar(languages, 365, 0)}
+         </g>
+         
+         <!-- Legend -->
+         <g transform="translate(20, 150)">
+            ${createLegend(languages, 0, 0)}
+         </g>
+      </g>
 
-        <!-- Legend Grid -->
-        <g transform="translate(25, 160)">
-          ${createLegend(languages, 0, 0)}
-        </g>
-      </g>
     </svg>
   `;
 };
@@ -283,7 +293,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const data = await fetchGitHubStats(token);
     const languages = calculateLanguages(data.viewer.repositories.nodes);
-    const svg = generateSVG(data, languages);
+    
+    // Fetch Avatar
+    const avatarUrl = 'https://github.com/' + data.viewer.login + '.png';
+    const avatarBase64 = await fetchBase64Image(avatarUrl);
+
+    const svg = generateSVG(data, languages, avatarBase64);
 
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 'public, max-age=14400, s-maxage=14400'); // 4 hours
