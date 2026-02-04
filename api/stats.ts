@@ -46,7 +46,7 @@ const THEME = {
   border: '#333333',
   accentPrimary: '#00f2ff',   // Neon Cyan
   accentSecondary: '#bd00ff', // Neon Purple
-  neonBorder: '#39ff14',      // Neon Green
+  neonBorder: '#1ec500ff',      // Neon Green
   textMain: '#ffffff',
   textMuted: '#888888',
   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
@@ -123,7 +123,8 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
       const { name, color } = edge.node;
       const { size } = edge;
       
-      // Removed exclusion list to show all languages
+      // Exclude unwanted languages
+      if (['Cython', 'Shell', 'PowerShell', 'PLpgSQL'].includes(name)) return;
 
       if (langMap.has(name)) {
         const current = langMap.get(name)!;
@@ -161,7 +162,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
   // Dynamic Height Calculation
   const MIN_HEIGHT = 360;
   const LEGEND_ROW_HEIGHT = 30;
-  const LEGEND_START_Y = 150;
+  const LEGEND_START_Y = 100; // Moved up from 150
   const CARD_PADDING_BOTTOM = 20;
   
   const legendRows = Math.ceil(languages.length / 2);
@@ -286,12 +287,12 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
 
          
          <!-- Bar -->
-         <g transform="translate(12, 100)" clip-path="url(#bar-inner)">
+         <g transform="translate(12, 60)" clip-path="url(#bar-inner)">
             ${createSegmentedBar(languages, 365, 0)}
          </g>
          
          <!-- Legend -->
-         <g transform="translate(20, 150)">
+         <g transform="translate(20, 100)">
             ${createLegend(languages, 0, 0)}
          </g>
       </g>
