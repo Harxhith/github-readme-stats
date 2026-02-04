@@ -67,7 +67,7 @@ const QUERY = `
         totalCount
         nodes {
           stargazerCount
-          languages(first: 10, orderBy: { field: SIZE, direction: DESC }) {
+          languages(first: 100, orderBy: { field: SIZE, direction: DESC }) {
             edges {
               size
               node {
@@ -114,6 +114,7 @@ const fetchBase64Image = async (url: string): Promise<string> => {
   }
 };
 
+
 const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
   const langMap = new Map<string, { size: number; color: string }>();
 
@@ -122,7 +123,7 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
       const { name, color } = edge.node;
       const { size } = edge;
       
-      if (['HTML', 'CSS', 'SCSS', 'Shell'].includes(name)) return; // Exclude boilerplate
+      // Removed exclusion list to show all languages
 
       if (langMap.has(name)) {
         const current = langMap.get(name)!;
@@ -135,13 +136,20 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 
   const sorted = Array.from(langMap.entries())
     .map(([name, data]) => ({ name, ...data }))
-    .sort((a, b) => b.size - a.size)
-    .slice(0, 5);
+    .sort((a, b) => b.size - a.size);
+    // Removed slice to show all languages
 
   const totalSize = sorted.reduce((acc, lang) => acc + lang.size, 0);
 
-  return sorted.map((lang) => ({
+  // Fallback palette for languages without colors
+  const fallbackColors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98FB98', 
+    '#DDA0DD', '#FFD700', '#FF69B4', '#00CED1', '#ADFF2F'
+  ];
+
+  return sorted.map((lang, index) => ({
     ...lang,
+    color: lang.color || fallbackColors[index % fallbackColors.length],
     percentage: parseFloat(((lang.size / totalSize) * 100).toFixed(1)),
   }));
 };
@@ -149,7 +157,17 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 // --- SVG Templates ---
 const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string) => {
   const width = 850;
-  const height = 360;
+  
+  // Dynamic Height Calculation
+  const MIN_HEIGHT = 360;
+  const LEGEND_ROW_HEIGHT = 30;
+  const LEGEND_START_Y = 150;
+  const CARD_PADDING_BOTTOM = 20;
+  
+  const legendRows = Math.ceil(languages.length / 2);
+  const requiredLegendHeight = legendRows * LEGEND_ROW_HEIGHT;
+  const rightCardHeight = Math.max(300, LEGEND_START_Y + requiredLegendHeight + CARD_PADDING_BOTTOM);
+  const height = Math.max(MIN_HEIGHT, rightCardHeight + 60);
   
   // Icons made with gradients
   const icons = {
@@ -262,7 +280,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
       
       <!-- 3. Languages Card (Right) -->
       <g transform="translate(430, 30)">
-         <rect width="390" height="300" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+         <rect width="390" height="${rightCardHeight}" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
          
          <text x="20" y="35" class="section-title">Top Languages</text>
 
