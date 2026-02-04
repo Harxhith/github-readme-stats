@@ -176,7 +176,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
   const legendRows = Math.ceil(languages.length / 2);
   const requiredRightCardHeight = LEGEND_START_Y + (legendRows * LEGEND_ROW_HEIGHT) + CARD_PADDING_BOTTOM;
   
-  // Ensure 
+  // Ensure both columns match in visual balance if right is smaller, but allow expansion if larger
   const rightCardHeight = Math.max(leftColumnHeight, requiredRightCardHeight);
   
   const height = Math.max(leftColumnHeight, rightCardHeight) + (PADDING * 2);
