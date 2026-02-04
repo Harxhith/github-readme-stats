@@ -251,7 +251,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
       <g transform="translate(30, 150)">
         <rect width="380" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         <text x="20" y="35" class="section-title" fill="${THEME.textMuted}">Overview</text>
-        <line x1="20" y1="50" x2="360" y2="50" stroke="#333" stroke-width="1" />
+
         
         <!-- 2x2 Grid -->
         ${createStatItem('Stars', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 20, 70, 'star')}
@@ -265,7 +265,7 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
          <rect width="390" height="300" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
          
          <text x="20" y="35" class="section-title">Top Languages</text>
-         <line x1="20" y1="50" x2="370" y2="50" stroke="#333" stroke-width="1" />
+
          
          <!-- Bar -->
          <g transform="translate(12, 100)" clip-path="url(#bar-inner)">
