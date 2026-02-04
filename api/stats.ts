@@ -161,17 +161,41 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
     </g>
   `;
 
-  const createLangBar = (lang: LanguageStat, y: number) => `
-    <g transform="translate(30, ${y})">
-       <text x="0" y="0" font-size="14" fill="${THEME.textMain}" font-weight="600">${lang.name}</text>
-      <text x="310" y="0" font-size="14" fill="${THEME.textMuted}" text-anchor="end">${lang.percentage}%</text>
-      
-      <!-- Bar Background -->
-      <rect x="0" y="10" width="310" height="6" fill="${THEME.accentSecondary}" rx="3" />
-      <!-- Bar Progress -->
-      <rect x="0" y="10" width="${(lang.percentage / 100) * 310}" height="6" fill="${lang.color || THEME.accentPrimary}" rx="3" />
-    </g>
-  `;
+  // --- Language Section Helpers ---
+  const createSegmentedBar = (languages: LanguageStat[], width: number, y: number) => {
+    let currentX = 0;
+    return `
+      <g transform="translate(0, ${y})">
+        <!-- Background -->
+        <rect x="0" y="0" width="${width}" height="10" fill="${THEME.accentSecondary}" rx="5" />
+        <!-- Segments -->
+        ${languages.map(lang => {
+          const segWidth = (lang.percentage / 100) * width;
+          const rect = `<rect x="${currentX}" y="0" width="${segWidth}" height="10" fill="${lang.color || THEME.accentPrimary}" first="${currentX === 0}" />`;
+          currentX += segWidth;
+          return rect;
+        }).join('')}
+        <!-- Mask for rounded corners -->
+        <use href="#bar-mask" />
+      </g>
+    `;
+  };
+
+  const createLegend = (languages: LanguageStat[], x: number, y: number) => {
+    return languages.map((lang, i) => {
+      const col = i % 2; // 0 or 1
+      const row = Math.floor(i / 2);
+      const xPos = x + (col * 160); // 2nd column offset
+      const yPos = y + (row * 25);
+
+      return `
+        <g transform="translate(${xPos}, ${yPos})">
+          <circle cx="5" cy="5" r="5" fill="${lang.color || THEME.accentPrimary}" />
+          <text x="15" y="9" font-size="14" fill="${THEME.textMain}" font-weight="600">${lang.name} <tspan fill="${THEME.textMuted}" font-weight="400">${lang.percentage}%</tspan></text>
+        </g>
+      `;
+    }).join('');
+  };
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
@@ -182,6 +206,13 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
         text { font-family: '${THEME.fontFamily}'; }
       </style>
       
+      <!-- Clip path for segmented bar rounded corners -->
+      <defs>
+         <clipPath id="bar-inner">
+             <rect width="315" height="10" rx="5" />
+         </clipPath>
+      </defs>
+
       <rect width="100%" height="100%" fill="${THEME.bg}" rx="10" />
       
       <!-- Card 1: Core Stats (Left) -->
@@ -205,11 +236,17 @@ const generateSVG = (stats: any, languages: LanguageStat[]) => {
       <!-- Card 2: Languages (Right) -->
       <g transform="translate(410, 25)">
         <rect width="365" height="310" style="${cardStyle}" />
-        <text x="25" y="55" class="title">TOP LANGUAGES</text>
+        <text x="25" y="55" class="title">Most Used Languages</text>
         <line x1="25" y1="80" x2="340" y2="80" stroke="${THEME.border}" />
         
-        <g transform="translate(0, 115)">
-          ${languages.map((l, i) => createLangBar(l, i * 42)).join('')}
+        <!-- Segmented Bar -->
+        <g transform="translate(25, 120)" clip-path="url(#bar-inner)">
+             ${createSegmentedBar(languages, 315, 0)}
+        </g>
+
+        <!-- Legend Grid -->
+        <g transform="translate(25, 160)">
+          ${createLegend(languages, 0, 0)}
         </g>
       </g>
     </svg>
