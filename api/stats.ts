@@ -243,15 +243,15 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
         <rect width="380" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         
         <image href="${avatarBase64}" x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
-        <text x="100" y="45" class="title">${stats.viewer.name}</text>
-        <text x="100" y="70" class="handle">@${stats.viewer.login}</text>
+        <text x="100" y="35" class="title">${stats.viewer.name}</text>
+        <text x="100" y="60" class="handle">@${stats.viewer.login}</text>
       </g>
       
       <!-- 2. Core Stats Grid (Bottom Left) -->
       <g transform="translate(30, 150)">
         <rect width="380" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
-        <text x="20" y="30" class="section-title" fill="${THEME.textMuted}">Overview</text>
-        <line x1="20" y1="45" x2="360" y2="45" stroke="#333" stroke-width="1" />
+        <text x="20" y="35" class="section-title" fill="${THEME.textMuted}">Overview</text>
+        <line x1="20" y1="50" x2="360" y2="50" stroke="#333" stroke-width="1" />
         
         <!-- 2x2 Grid -->
         ${createStatItem('Stars', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 20, 70, 'star')}
