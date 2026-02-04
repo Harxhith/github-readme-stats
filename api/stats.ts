@@ -243,8 +243,8 @@ const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string
         <rect width="380" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         
         <image href="${avatarBase64}" x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
-        <text x="100" y="35" class="title">${stats.viewer.name}</text>
-        <text x="100" y="60" class="handle">@${stats.viewer.login}</text>
+        <text x="100" y="46" class="title">${stats.viewer.name}</text>
+        <text x="100" y="71" class="handle">@${stats.viewer.login}</text>
       </g>
       
       <!-- 2. Core Stats Grid (Bottom Left) -->
