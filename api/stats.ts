@@ -176,8 +176,8 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
   const BORDER_WIDTH = 1; // Stroke width
   
   // Calculate height for Language Card
-  const LEGEND_ROW_HEIGHT = 25;
-  const LEGEND_START_Y = 90;
+  const LEGEND_ROW_HEIGHT = 30;
+  const LEGEND_START_Y = 100;
   const CARD_PADDING_BOTTOM = 20;
   // Mobile: 1 col, Desktop: 2 cols
   const cols = isMobile ? 1 : 2; 
@@ -256,7 +256,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
       const col = i % cols; // Dynamic columns
       const row = Math.floor(i / cols);
       const xPos = x + (col * (isMobile ? 0 : 170)); // Mobile: offset 0 (single col)
-      const yPos = y + (row * 30);
+      const yPos = y + (row * LEGEND_ROW_HEIGHT);
 
       return `
         <g transform="translate(${xPos}, ${yPos})">
