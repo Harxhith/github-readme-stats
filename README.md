@@ -2,7 +2,7 @@
 
 > A Vercel Serverless Function that generates dynamic, Neon-styled statistics for your GitHub Profile README.
 
-![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/)
+![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/?cache_buster=2)
 
 ## Features
 
