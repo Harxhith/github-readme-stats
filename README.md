@@ -1,14 +1,16 @@
-# 🦇 Batman-Themed GitHub Stats
+# ⚡ Neon GitHub Stats
 
-> A Vercel Serverless Function that generates dynamic, Batman-styled statistics for your GitHub Profile README.
+> A Vercel Serverless Function that generates dynamic, Neon-styled statistics for your GitHub Profile README.
 
 ![Stats Preview](api/stats)
 
 ## Features
 
-- **Batman Theme**: Deep charcoal background (`#0a0a0a`), tactical gray accents, and signature yellow highlights.
-- **Core Stats**: Total Stars, Commits, Pull Requests, **Total Repositories**, and **Contributed To (last year)**.
-- **Top Languages**: Automatically calculated top 5 languages by code size (excluding boilerplate like HTML/CSS).
+- **Neon Cyberpunk Theme**: Deep black background (`#050505`) with vibrant Neon Cyan (`#00f2ff`) and Purple (`#bd00ff`) accents.
+- **Responsive Layout**: **Automatically detects mobile devices** and switches to a stacked vertical layout for better readability.
+- **Bento Grid Layout**: Modern, clean grid design for stats presentation.
+- **Core Stats**: Total Stars, Commits, Pull Requests, Repositories, and Contributions.
+- **Top Languages**: Vibrant segmented bar showing your top languages.
 - **Performance**: High-performance SVG generation with built-in caching (4 hours).
 
 ---
@@ -54,6 +56,19 @@ Add this markdown to your GitHub Profile `README.md`:
 ![My Stats](https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats)
 ```
 
+### 📱 Mobile & Responsive
+
+The card detects the User-Agent (browser) of the viewer.
+
+- **Desktop**: Shows the wide "Bento Grid" layout.
+- **Mobile**: Automatically switches to a vertical stacked layout.
+
+You can also force the mobile layout by appending `?layout=mobile`:
+
+```markdown
+![My Stats Mobile](https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats?layout=mobile)
+```
+
 ---
 
 ## 🛠 Local Development
@@ -63,8 +78,8 @@ If you want to modify the code or theme:
 1.  **Clone the repo**:
 
     ```bash
-    git clone https://github.com/<your-username>/github-readme-stats-batman.git
-    cd github-readme-stats-batman
+    git clone https://github.com/<your-username>/github-readme-stats.git
+    cd github-readme-stats
     ```
 
 2.  **Install dependencies**:
@@ -84,11 +99,13 @@ You can change the colors in `api/stats.ts` to match your own style:
 
 ```typescript
 const THEME = {
-  bg: "#0a0a0a", // Background
-  border: "#222222", // Border color
-  accentSecondary: "#333333", // Secondary elements (Gray)
-  accentPrimary: "#f2d41f", // Main accent (Yellow)
-  textMain: "#e0e0e0", // Main text
-  textMuted: "#666666", // Subtitles
+  bg: "#050505", // Deep Black
+  cardBg: "#0a0a0a", // Slightly lighter card bg
+  border: "#333333",
+  accentPrimary: "#00f2ff", // Neon Cyan
+  accentSecondary: "#bd00ff", // Neon Purple
+  neonBorder: "#1ec500ff", // Neon Green
+  textMain: "#ffffff",
+  textMuted: "#888888",
 };
 ```
