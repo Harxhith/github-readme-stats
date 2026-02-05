@@ -166,11 +166,11 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string, options: { isMobile?: boolean } = {}) => {
   const { isMobile = false } = options;
 
-  const PADDING = 30; // Outer padding
+  const PADDING = isMobile ? 15 : 30; // Outer padding
   const GAP = 20;
 
   // Dimensions
-  const PROFILE_CARD_WIDTH = 380;
+  const PROFILE_CARD_WIDTH = isMobile ? 320 : 380;
   const PROFILE_CARD_HEIGHT = 100;
   const OVERVIEW_CARD_HEIGHT = 180;
   const BORDER_WIDTH = 1; // Stroke width
@@ -179,7 +179,9 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
   const LEGEND_ROW_HEIGHT = 25;
   const LEGEND_START_Y = 90;
   const CARD_PADDING_BOTTOM = 20;
-  const legendRows = Math.ceil(languages.length / 2);
+  // Mobile: 1 col, Desktop: 2 cols
+  const cols = isMobile ? 1 : 2; 
+  const legendRows = Math.ceil(languages.length / cols);
   const requiredRightCardHeight = LEGEND_START_Y + (legendRows * LEGEND_ROW_HEIGHT) + CARD_PADDING_BOTTOM;
   
   // Desktop specific calcs
@@ -193,7 +195,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
 
   if (isMobile) {
     // Stacked Layout
-    width = PADDING * 2 + PROFILE_CARD_WIDTH; // 30 + 380 + 30 = 440
+    width = PADDING * 2 + PROFILE_CARD_WIDTH; 
     
     // Positions
     profilePos = { x: PADDING, y: PADDING };
@@ -251,9 +253,9 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
 
   const createLegend = (languages: LanguageStat[], x: number, y: number) => {
     return languages.map((lang, i) => {
-      const col = i % 2; // 0 or 1
-      const row = Math.floor(i / 2);
-      const xPos = x + (col * 170); 
+      const col = i % cols; // Dynamic columns
+      const row = Math.floor(i / cols);
+      const xPos = x + (col * (isMobile ? 0 : 170)); // Mobile: offset 0 (single col)
       const yPos = y + (row * 30);
 
       return `
@@ -284,7 +286,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
           </feMerge>
         </filter>
         <clipPath id="bar-inner">
-             <rect width="340" height="12" rx="4" />
+             <rect width="${PROFILE_CARD_WIDTH - 40}" height="12" rx="4" />
          </clipPath>
       </defs>
 
@@ -302,7 +304,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
       
       <!-- 1. Profile Card (Top Left or Top) -->
       <g transform="translate(${profilePos.x}, ${profilePos.y})">
-        <rect width="380" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+        <rect width="${PROFILE_CARD_WIDTH}" height="100" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         
         <image href="${avatarBase64}" x="20" y="20" height="60" width="60" clip-path="circle(30px)" />
         <text x="100" y="46" class="title">${stats.viewer.name}</text>
@@ -311,7 +313,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
       
       <!-- 2. Core Stats Grid (Bottom Left or Middle) -->
       <g transform="translate(${overviewPos.x}, ${overviewPos.y})">
-        <rect width="380" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+        <rect width="${PROFILE_CARD_WIDTH}" height="180" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
         <text x="20" y="35" class="section-title" fill="${THEME.textMuted}">Overview</text>
 
         <!-- 2x2 Grid -->
@@ -323,13 +325,13 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
       
       <!-- 3. Languages Card (Right or Bottom) -->
       <g transform="translate(${langPos.x}, ${langPos.y})">
-         <rect width="380" height="${langCardHeight}" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
+         <rect width="${PROFILE_CARD_WIDTH}" height="${langCardHeight}" rx="8" fill="${THEME.cardBg}" stroke="#333" stroke-width="1" />
          
          <text x="20" y="35" class="section-title">Top Languages</text>
 
          <!-- Bar -->
          <g transform="translate(20, 60)" clip-path="url(#bar-inner)">
-            ${createSegmentedBar(languages, 340, 0)}
+            ${createSegmentedBar(languages, PROFILE_CARD_WIDTH - 40, 0)}
          </g>
          
          <!-- Legend -->
