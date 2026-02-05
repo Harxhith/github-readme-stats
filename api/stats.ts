@@ -339,7 +339,9 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
 // --- Main Handler ---
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.GH_TOKEN;
-  const isMobile = req.query.layout === 'mobile';
+  const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+  const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+  const isMobile = req.query.layout === 'mobile' || isMobileUA;
 
   if (!token) {
     return res.status(500).send('Error: GH_TOKEN is missing');
@@ -357,6 +359,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 'public, max-age=14400, s-maxage=14400'); // 4 hours
+    res.setHeader('Vary', 'User-Agent');
     res.status(200).send(svg);
   } catch (error: any) {
     console.error(error);
