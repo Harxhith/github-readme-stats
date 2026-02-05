@@ -284,7 +284,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
           </feMerge>
         </filter>
         <clipPath id="bar-inner">
-             <rect width="365" height="12" rx="4" />
+             <rect width="340" height="12" rx="4" />
          </clipPath>
       </defs>
 
@@ -328,8 +328,8 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
          <text x="20" y="35" class="section-title">Top Languages</text>
 
          <!-- Bar -->
-         <g transform="translate(12, 60)" clip-path="url(#bar-inner)">
-            ${createSegmentedBar(languages, 365, 0)}
+         <g transform="translate(20, 60)" clip-path="url(#bar-inner)">
+            ${createSegmentedBar(languages, 340, 0)}
          </g>
          
          <!-- Legend -->
