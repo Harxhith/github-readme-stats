@@ -58,16 +58,32 @@ Add this markdown to your GitHub Profile `README.md`:
 
 ### 📱 Mobile & Responsive
 
-The card detects the User-Agent (browser) of the viewer.
+GitHub proxies all images, so **automatic mobile detection does not work** on GitHub Profiles.
 
-- **Desktop**: Shows the wide "Bento Grid" layout.
-- **Mobile**: Automatically switches to a vertical stacked layout.
+To ensure your stats card looks perfect on mobile devices, you **must** use the `<picture>` tag. This forces the browser to load the mobile layout on small screens.
 
-You can also force the mobile layout by appending `?layout=mobile`:
+Copy and paste this code into your `README.md`:
 
-```markdown
-![My Stats Mobile](https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats?layout=mobile)
+```html
+<div align="center">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark) and (max-width: 480px)"
+      srcset="https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats?layout=mobile"
+    />
+    <source
+      media="(max-width: 480px)"
+      srcset="https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats?layout=mobile"
+    />
+    <img
+      src="https://<YOUR-VERCEL-DOMAIN>.vercel.app/api/stats"
+      alt="Github Stats"
+    />
+  </picture>
+</div>
 ```
+
+**Note:** Replace `<YOUR-VERCEL-DOMAIN>` with your actual deployment URL.
 
 ---
 
