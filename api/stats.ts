@@ -29,6 +29,9 @@ interface UserStatsData {
       totalCount: number;
       nodes: RepositoryNode[];
     };
+    followers: {
+      totalCount: number;
+    };
   };
 }
 
@@ -62,6 +65,9 @@ const QUERY = `
         totalCommitContributions
         totalPullRequestContributions
         totalRepositoryContributions
+      }
+      followers {
+        totalCount
       }
       repositories(first: 100, ownerAffiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR], isFork: false) {
         totalCount
@@ -212,7 +218,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
     star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#grad1)"/>',
     commit: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z" fill="url(#grad2)"/>',
     repo: '<path d="M4 19h4v-2H4v2zm0-4h4v-2H4v2zm0-4h4V9H4v2zm0-4h4V5H4v2zm6 12h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H10c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM10 5h10v14H10V5z" fill="url(#grad2)"/>',
-    contributed: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.39z" fill="url(#grad2)"/>'
+    followers: '<path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="url(#grad2)"/>'
   };
 
   const createStatItem = (label: string, value: number|string, x: number, y: number, iconKey: string) => `
@@ -312,7 +318,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
         ${createStatItem('Stars', stats.viewer.repositories.nodes.reduce((a: any, b: any) => a + b.stargazerCount, 0), 20, 70, 'star')}
         ${createStatItem('Commits', stats.viewer.contributionsCollection.totalCommitContributions, 190, 70, 'commit')}
         ${createStatItem('Repos', stats.viewer.repositories.totalCount, 20, 130, 'repo')}
-        ${createStatItem('Contributed', stats.viewer.contributionsCollection.totalRepositoryContributions, 190, 130, 'contributed')}
+        ${createStatItem('Followers', stats.viewer.followers.totalCount, 190, 130, 'followers')}
       </g>
       
       <!-- 3. Languages Card (Right or Bottom) -->
