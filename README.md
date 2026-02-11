@@ -7,7 +7,6 @@
 ## Features
 
 - **Neon Cyberpunk Theme**: Deep black background (`#050505`) with vibrant Neon Cyan (`#00f2ff`) and Purple (`#bd00ff`) accents.
-- **Responsive Layout**: **Automatically detects mobile devices** and switches to a stacked vertical layout for better readability.
 - **Bento Grid Layout**: Modern, clean grid design for stats presentation.
 - **Core Stats**: Total Stars, Commits, Pull Requests, Repositories, and Contributions.
 - **Top Languages**: Vibrant segmented bar showing your top languages.
