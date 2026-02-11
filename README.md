@@ -1,4 +1,4 @@
-# ⚡ Neon GitHub Stats
+# GitHub Stats
 
 > A Vercel Serverless Function that generates dynamic, Neon-styled statistics for your GitHub Profile README.
 
