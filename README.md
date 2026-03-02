@@ -2,7 +2,7 @@
 
 > A Vercel Serverless Function that generates dynamic, Batman-themed statistics for your GitHub Profile README.
 
-![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/api/stats/?cache_buster=2)
+![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/api/stats/?cache_buster=3)
 
 ## Features
 
