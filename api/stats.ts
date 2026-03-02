@@ -49,7 +49,7 @@ const THEME = {
   border: '#333333',
   accentPrimary: '#00f2ff',   // Neon Cyan
   accentSecondary: '#bd00ff', // Neon Purple
-  neonBorder: '#1ec500ff',      // Neon Green
+  neonBorder: '#3f3f3fff',      // Neon Green
   textMain: '#ffffff',
   textMuted: '#888888',
   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
