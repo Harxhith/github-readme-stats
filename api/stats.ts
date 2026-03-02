@@ -44,14 +44,14 @@ interface LanguageStat {
 
 // --- Configuration ---
 const THEME = {
-  bg: '#050505',          // Deep Black
-  cardBg: '#0a0a0a',      // Slightly lighter card bg
+  bg: '#0F0F0F',          // Very Dark Gray (almost black)
+  cardBg: '#1A1A1A',      // Dark Gray for cards
   border: '#333333',
-  accentPrimary: '#00f2ff',   // Neon Cyan
-  accentSecondary: '#bd00ff', // Neon Purple
-  neonBorder: '#3f3f3fff',      // Neon Green
-  textMain: '#ffffff',
-  textMuted: '#888888',
+  accentPrimary: '#FCE205',   // Batman Yellow
+  accentSecondary: '#808080', // Batman Gray
+  neonBorder: '#FCE205',      // Yellow border
+  textMain: '#FFFFFF',
+  textMuted: '#A9A9A9',
   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 };
 

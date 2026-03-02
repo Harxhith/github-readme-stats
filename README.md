@@ -6,7 +6,7 @@
 
 ## Features
 
-- **Batman Theme**: Deep black background (`#050505`) with vibrant Neon Cyan (`#00f2ff`) and Purple (`#bd00ff`) accents.
+- **Batman Theme**: Very dark gray/black background (`#0F0F0F`) with vibrant Batman Yellow (`#FCE205`) and Batman Gray (`#808080`) accents.
 - **Bento Grid Layout**: Modern, clean grid design for stats presentation.
 - **Core Stats**: Total Stars, Commits, Pull Requests, Repositories, and Contributions.
 - **Top Languages**: Vibrant segmented bar showing your top languages.
@@ -114,14 +114,14 @@ You can change the colors in `api/stats.ts` to match your own style:
 
 ```typescript
 const THEME = {
-  bg: "#050505", // Deep Black
-  cardBg: "#0a0a0a", // Slightly lighter card bg
+  bg: "#0F0F0F", // Very Dark Gray (almost black)
+  cardBg: "#1A1A1A", // Dark Gray for cards
   border: "#333333",
-  accentPrimary: "#00f2ff", // Neon Cyan
-  accentSecondary: "#bd00ff", // Neon Purple
-  neonBorder: "#3f3f3fff", // Neon Green
-  textMain: "#ffffff",
-  textMuted: "#888888",
+  accentPrimary: "#FCE205", // Batman Yellow
+  accentSecondary: "#808080", // Batman Gray
+  neonBorder: "#FCE205", // Yellow border
+  textMain: "#FFFFFF",
+  textMuted: "#A9A9A9",
   fontFamily:
     'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 };
