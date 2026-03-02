@@ -2,11 +2,11 @@
 
 > A Vercel Serverless Function that generates dynamic, Batman-themed statistics for your GitHub Profile README.
 
-![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/api/stats/?cache_buster=3)
+![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/api/stats/?cache_buster=7)
 
 ## Features
 
-- **Batman Theme**: Very dark gray/black background (`#0F0F0F`) with vibrant Batman Yellow (`#FCE205`) and Batman Gray (`#808080`) accents.
+- **Batman Theme**: Minimalistic deep black background (`#000000`) with subtle gray accents (`#A3A3A3` and `#525252`).
 - **Bento Grid Layout**: Modern, clean grid design for stats presentation.
 - **Core Stats**: Total Stars, Commits, Pull Requests, Repositories, and Contributions.
 - **Top Languages**: Vibrant segmented bar showing your top languages.
@@ -114,14 +114,14 @@ You can change the colors in `api/stats.ts` to match your own style:
 
 ```typescript
 const THEME = {
-  bg: "#0F0F0F", // Very Dark Gray (almost black)
-  cardBg: "#1A1A1A", // Dark Gray for cards
-  border: "#333333",
-  accentPrimary: "#FCE205", // Batman Yellow
-  accentSecondary: "#808080", // Batman Gray
-  neonBorder: "#FCE205", // Yellow border
-  textMain: "#FFFFFF",
-  textMuted: "#A9A9A9",
+  bg: "#000000", // Deep Black
+  cardBg: "#0D0D0D", // Very Dark Gray for cards
+  border: "#1A1A1A", // Dark Gray Border
+  accentPrimary: "#A3A3A3", // Light Gray Accent
+  accentSecondary: "#525252", // Mid Gray Accent
+  neonBorder: "#262626", // Dark Gray Border instead of Neon
+  textMain: "#E5E5E5", // Off-White for better readability
+  textMuted: "#737373", // Muted Gray
   fontFamily:
     'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 };
