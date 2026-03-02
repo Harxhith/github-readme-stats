@@ -1,12 +1,12 @@
 # GitHub Stats
 
-> A Vercel Serverless Function that generates dynamic, Neon-styled statistics for your GitHub Profile README.
+> A Vercel Serverless Function that generates dynamic, Batman-themed statistics for your GitHub Profile README.
 
 ![Stats Preview](https://github-readme-stats-virid-eight-90.vercel.app/api/stats/?cache_buster=2)
 
 ## Features
 
-- **Neon Cyberpunk Theme**: Deep black background (`#050505`) with vibrant Neon Cyan (`#00f2ff`) and Purple (`#bd00ff`) accents.
+- **Batman Theme**: Deep black background (`#050505`) with vibrant Neon Cyan (`#00f2ff`) and Purple (`#bd00ff`) accents.
 - **Bento Grid Layout**: Modern, clean grid design for stats presentation.
 - **Core Stats**: Total Stars, Commits, Pull Requests, Repositories, and Contributions.
 - **Top Languages**: Vibrant segmented bar showing your top languages.
@@ -119,8 +119,10 @@ const THEME = {
   border: "#333333",
   accentPrimary: "#00f2ff", // Neon Cyan
   accentSecondary: "#bd00ff", // Neon Purple
-  neonBorder: "#1ec500ff", // Neon Green
+  neonBorder: "#3f3f3fff", // Neon Green
   textMain: "#ffffff",
   textMuted: "#888888",
+  fontFamily:
+    'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 };
 ```
