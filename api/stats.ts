@@ -297,7 +297,7 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
       </style>
       
       <!-- Main Background -->
-      <rect x="2" y="2" width="${width - 4}" height="${height - 4}" fill="${THEME.bg}" rx="16" stroke="${(THEME as any).neonBorder}" stroke-width="3" />
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" fill="${THEME.bg}" rx="16" stroke="${(THEME as any).neonBorder}" stroke-width="1" />
       
       <!-- Bento Grid Layout -->
       
