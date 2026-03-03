@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 
 // --- Types ---
-// --- Types ---
 interface RepositoryNode {
   stargazerCount: number;
   languages: {
@@ -166,8 +165,8 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string, options: { isMobile?: boolean } = {}) => {
   const { isMobile = false } = options;
 
-  const PADDING = 10; // Outer padding
-  const GAP = 10;
+  const PADDING = 15; // Outer padding
+  const GAP = 15;
 
   // Dimensions
   const PROFILE_CARD_WIDTH = isMobile ? 320 : 380;
@@ -206,13 +205,13 @@ export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64:
     height = langPos.y + langCardHeight + PADDING;
   } else {
     // Wide Layout (Default)
-    width = 850;
+    width = (PADDING * 2) + GAP + (PROFILE_CARD_WIDTH * 2);
     langCardHeight = desktopRightCardHeight;
     height = Math.max(leftColumnHeight, langCardHeight) + (PADDING * 2);
 
-    profilePos = { x: 30, y: PADDING };
-    overviewPos = { x: 30, y: PADDING + 100 + GAP };
-    langPos = { x: 430, y: PADDING }; 
+    profilePos = { x: PADDING, y: PADDING };
+    overviewPos = { x: PADDING, y: PADDING + PROFILE_CARD_HEIGHT + GAP };
+    langPos = { x: PADDING + PROFILE_CARD_WIDTH + GAP, y: PADDING }; 
   }
   
   // Icons made with gradients
