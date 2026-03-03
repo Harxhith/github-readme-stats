@@ -166,8 +166,8 @@ const calculateLanguages = (repos: RepositoryNode[]): LanguageStat[] => {
 export const generateSVG = (stats: any, languages: LanguageStat[], avatarBase64: string, options: { isMobile?: boolean } = {}) => {
   const { isMobile = false } = options;
 
-  const PADDING = isMobile ? 15 : 30; // Outer padding
-  const GAP = 20;
+  const PADDING = 10; // Outer padding
+  const GAP = 10;
 
   // Dimensions
   const PROFILE_CARD_WIDTH = isMobile ? 320 : 380;
